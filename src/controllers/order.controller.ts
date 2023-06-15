@@ -20,19 +20,27 @@ export class OrderController {
   }
 
   getOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params
-    if (!id) {
-      return next()
-    }
+    try {
+      const { id } = req.params
+      if (!id) {
+        return next()
+      }
 
-    const result = await this.orderService.getOrder(id)
-    res.status(200).json(result)
+      const result = await this.orderService.getOrder(id)
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
   }
   postOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const { totalQty, orderItems } = req.body
-    await this.orderService.postOrder(totalQty, orderItems)
+    try {
+      const { totalQty, orderItems } = req.body
+      await this.orderService.postOrder(totalQty, orderItems)
 
-    res.status(201).json({ result: 'success' })
+      res.status(201).json({ result: 'success' })
+    } catch (error) {
+      next(error)
+    }
   }
   patchOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -45,9 +53,13 @@ export class OrderController {
     }
   }
   deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params
+    try {
+      const { id } = req.params
 
-    await this.orderService.deleteOrder(id)
-    res.status(200).json({ result: 'success' })
+      await this.orderService.deleteOrder(id)
+      res.status(200).json({ result: 'success' })
+    } catch (error) {
+      next()
+    }
   }
 }
